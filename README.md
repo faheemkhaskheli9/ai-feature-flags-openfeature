@@ -4,7 +4,7 @@
 > This is an original, from-scratch build. It is not affiliated with, and does not
 > contain any code, prompts, data, or business logic from, any employer or client.
 
-![status](https://img.shields.io/badge/status-planned-lightgrey)
+![status](https://img.shields.io/badge/status-in%20progress-yellow)
 ![python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
@@ -91,10 +91,14 @@ No proprietary, employer-owned, or client-identifiable data is used in this proj
 
 ## 9. Training / Execution
 
-Document the commands used to run training, ingestion, or the main pipeline, e.g.:
+Phase 1 defines the versioned flag schema (`docs/flag_schema.md`) — a
+pydantic `FlagDefinition` covering boolean/string/number/object flags, with
+`default_value` validated against `type`:
 
 ```bash
-python -m src.main --config configs/default.yaml
+pip install -r requirements.txt
+python -m ai_feature_flags.cli show-examples
+python -m ai_feature_flags.cli validate examples/flags/rag_enabled.json
 ```
 
 ## 10. Evaluation
