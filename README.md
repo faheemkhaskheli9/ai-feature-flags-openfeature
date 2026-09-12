@@ -101,6 +101,24 @@ python -m ai_feature_flags.cli show-examples
 python -m ai_feature_flags.cli validate examples/flags/rag_enabled.json
 ```
 
+The config store (`config_store.py`) backs flags with Redis when
+`$REDIS_URL`/`--redis-url` resolves and is reachable, else a local JSON-file
+store under `configs/flags`. The `flag` CLI does CRUD against whichever
+store is active, validating every write against the `FlagDefinition` schema
+before it's persisted:
+
+```bash
+python -m ai_feature_flags.cli flag create --key rag.enabled --type boolean \
+    --default true --description "Toggle RAG" --owner platform-ai
+python -m ai_feature_flags.cli flag list                 # table output
+python -m ai_feature_flags.cli flag list --json           # JSON, for scripting
+python -m ai_feature_flags.cli flag update --key rag.enabled --default false
+python -m ai_feature_flags.cli flag delete --key rag.enabled
+```
+
+`--file-dir`/`--redis-url` on any `flag` subcommand override the store
+location for local runs and tests.
+
 ## 10. Evaluation
 
 Document evaluation metrics and how to reproduce them here (see `docs/evaluation.md`).
