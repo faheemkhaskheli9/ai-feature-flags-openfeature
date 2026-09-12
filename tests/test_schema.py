@@ -63,6 +63,35 @@ def test_updated_before_created_is_rejected():
         FlagDefinition(**_flag(updated_at=datetime(2024, 1, 1, tzinfo=timezone.utc)))
 
 
+def test_missing_owner_is_rejected():
+    payload = _flag()
+    del payload["owner"]
+    with pytest.raises(ValidationError):
+        FlagDefinition(**payload)
+
+
+def test_empty_owner_is_rejected():
+    with pytest.raises(ValidationError):
+        FlagDefinition(**_flag(owner=""))
+
+
+def test_missing_description_is_rejected():
+    payload = _flag()
+    del payload["description"]
+    with pytest.raises(ValidationError):
+        FlagDefinition(**payload)
+
+
+def test_unknown_type_is_rejected():
+    with pytest.raises(ValidationError):
+        FlagDefinition(**_flag(type="not-a-real-type"))
+
+
+def test_empty_key_is_rejected():
+    with pytest.raises(ValidationError):
+        FlagDefinition(**_flag(key=""))
+
+
 def test_example_flags_cover_every_type():
     types = {flag.type for flag in example_flags()}
     assert types == set(FlagType)

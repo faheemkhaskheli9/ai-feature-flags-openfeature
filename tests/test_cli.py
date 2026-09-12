@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from ai_feature_flags.cli import main
 
 
@@ -77,6 +79,22 @@ def test_flag_create_rejects_type_mismatched_default(tmp_path, capsys):
     rc = main(_create_args(tmp_path, default="not-a-bool"))
     assert rc == 1
     assert "invalid flag definition" in capsys.readouterr().err
+
+
+def test_flag_create_rejects_unknown_type_with_actionable_message(tmp_path, capsys):
+    with pytest.raises(SystemExit):
+        main(_create_args(tmp_path, type="not-a-real-type"))
+    assert "invalid choice" in capsys.readouterr().err
+
+
+def test_flag_create_rejects_missing_owner_with_actionable_message(tmp_path, capsys):
+    argv = _create_args(tmp_path)
+    # drop --owner and its value
+    owner_idx = argv.index("--owner")
+    del argv[owner_idx : owner_idx + 2]
+    with pytest.raises(SystemExit):
+        main(argv)
+    assert "--owner" in capsys.readouterr().err
 
 
 def test_flag_create_rejects_bad_json_for_object_type(tmp_path, capsys):
