@@ -1,4 +1,6 @@
 pydantic>=2.5
+redis>=5.0
 
 # dev / test
 pytest>=7.0
+fakeredis>=2.20
